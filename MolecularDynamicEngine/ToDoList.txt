@@ -1,0 +1,62 @@
+﻿// USEFUl LINKS
+// https://manual.gromacs.org/current/reference-manual/definitions.html
+
+
+
+
+// 3/13/2026
+X- just just CalcLJPotential to accept input from pdbreader.cpp
+so that i can use pdbreader.cpp variable and function in
+Lennard_jones_potential.cpp
+
+X-next: i need to calculate the lennard jones potential for
+all argon atoms since i now have distance matrix
+
+// 3/14/2026
+- I need to now create the LJ Potential function on run it on the matrix
+
+//3/19/2026
+-X (FIXED) taking dinner break. Big issue is CalcForceLJPotential Distance calculation is different from everywhere else
+-I calculated the force now i need to apply it to the unit vector of their position to project the vector onto the position
+
+//3/23/2026
+-- got force calculations understood and written, just making the results into reusable code for MD simulations.
+
+// 3/24/2026
+-- Xacceleration is done now just velocity verlet, but im workin on getting units right also
+
+//   3/25/2026
+- units are good for force, energy, acceleration, and velcoity,
+
+// 3/27/2026
+- simulation runs now , working on hard boundary and periodic boundary. PBC floor multiplcation is giveing issues
+    to fix try applying in inside of the position update function
+
+// 3/31/2026
+    - seems like force calculations work right and atoms are responding to eachother. the PBC causes issues because i
+        was correcting the absolute position not relative which could affect its relation to other atoms
+    - Perhaps a box is the better way to go to check force calculations
+    -Will need to store forces and plot them also to check how it responds over time
+
+// 4/3/2026
+
+- simulation runs well, the gen velocities were messed up because it was converting the mass to kg/mol when it should be
+    g/mol which let to a velocity of 10 nm/ps in some atoms which was making shit jump crazy and the time scale was bad b/c
+    of that which led to atoms overlaping and not calculating force correctly
+
+- I'm measuring the KE and PE to make sure the total energy only drifts alittle ontop of analyzing the trajectory over time
+    to make sure the simulation behave correctly. I need to rework the LJ Potential energy to include PBC if im going to use it
+    which i should. i should then be able to compare my Total energies to gromacs and see similar results.
+
+// 4/6/2026
+-KE and PE are done and system is stable with low fluctuations
+
+// 4/7/2026
+
+    - Need to track momentum to make sure it is conserved
+    - Need to plot distance between two atoms to make sure the distance is rmin which is rmin = 2^(1/6)sigma because sigma is when potential is 0
+
+
+
+
+

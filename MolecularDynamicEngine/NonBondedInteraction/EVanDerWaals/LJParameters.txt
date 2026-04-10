@@ -1,0 +1,11 @@
+﻿
+
+        atoms        sigma(A)       epsilon(kJ/mol)
+PAIR    Ar-Ar        3.40           0.997
+
+
+
+
+
+
+

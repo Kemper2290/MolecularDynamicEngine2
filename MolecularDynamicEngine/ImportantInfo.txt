@@ -1,0 +1,28 @@
+﻿// This contains important info on units and equations
+
+
+# we follow the gromacs units for convience and comparison https://manual.gromacs.org/current/reference-manual/definitions.html
+
+#Basic units
+length      r   nm = 10^-9 m
+mass        m   u (unified atomic mass unit) = 1.660538921 * 10^-27 // were using g/mol
+time        t   ps = 10^-12 s
+charge      q   e = elementary charge = 1.602176565 * 10 ^-19 C
+temperature T   K
+
+#derived units
+energy                  E,V     kJ/mol
+force                   F       kJ/mol*nm
+pressure                p       bar
+velocity                v       nm/ps = 1000m/s
+dipole moment           μ       e nm
+electric potential      Phi     kJ/mol*e = 0.010364269 Volt
+electric field          E       kJ/mol*nm*e = 1.036426919 V/m
+
+#Physical Constants
+N       Avogadros number        6.02214129*10^23 1/mol
+R       gas constant            8.3144621 * 10^-3 kJ/mol*K
+kb      Boltzmann's constant    idem
+h       Planck's Constant       0.399031272 kJ*ps/mol
+hbar    Dirac's constant        0.0635077993 kJ*ps/mol
+c       velocity of light       299792.458 nm/ps
