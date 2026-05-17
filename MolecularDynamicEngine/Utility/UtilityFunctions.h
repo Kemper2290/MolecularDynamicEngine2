@@ -34,5 +34,6 @@ void Plot2D(std::vector<std::vector<float>> trajectory_input,float delay, float 
 
 std::vector<std::vector<float>> CreateAtomCluster(float space, float gridsize = 3);
 
+std::vector<float> MIC_2DTrajectory(std::vector<float>& position_inp, float box_size_inp);
 
 #endif

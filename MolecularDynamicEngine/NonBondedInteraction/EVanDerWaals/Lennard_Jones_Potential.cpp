@@ -556,6 +556,8 @@ std::vector<float> LJPotential::PBCForceLJPotential(
 
     int N_atoms = last_row.size()/3;
     std::vector<float> forces(last_row.size(),0);
+    float sigma6 = std::pow(sigma,6);
+    float sigma12 = sigma6 * sigma6;
 
     for (int i =0; i < N_atoms; ++i)
     {
@@ -595,12 +597,11 @@ std::vector<float> LJPotential::PBCForceLJPotential(
 
             if (r2 < 1e-12) continue; // continues to next loop since r = 0 which means distance is so far its 0 because were only measuring unique pairs
 
-            float inv_r2 = 1 / r2;
+            float inv_r2 = 1.0f / r2;
             float inv_r6 = inv_r2 * inv_r2 * inv_r2;
             float inv_r12 = inv_r6 * inv_r6;
 
-            float sigma6 = std::pow(sigma,6);
-            float sigma12 = sigma6 * sigma6;
+
 
             float force_scalar = 24*epsilon * ((2*sigma12*inv_r12) - (sigma6*inv_r6)) * inv_r2;
 

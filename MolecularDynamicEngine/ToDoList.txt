@@ -56,7 +56,11 @@ all argon atoms since i now have distance matrix
     - Need to track momentum to make sure it is conserved
     - Need to plot distance between two atoms to make sure the distance is rmin which is rmin = 2^(1/6)sigma because sigma is when potential is 0
 
+// 4/10/2026
+    -got pbc, atom distance, and MIC working and plotting
+    -need to change acceleration to an average so that its an intergration which reduces my total energy drift hopefully.
 
-
-
+// 4/11/2026
+    - calculating the momentum and tracking but right now its giving 0's
+    -acceleration was acutally good so no need to worry about
 

@@ -16,6 +16,7 @@ public:
                                         std::vector<float> atom_force_input);
 
 
+
     static std::vector<float> CalcVerletPosition(std::vector<std::vector<float>> coord_input
                                                             ,std::vector<float> atom_accel_input,
                                                             std::vector<float> velocity_input,
@@ -47,10 +48,12 @@ public:
 
     //static std::vector<float> force;
     static std::vector<float> atom_accel;
+
     static std::vector<float> new_atom_position;
     static std::vector<float> new_atom_velocity;
     //static std::vector<float> new_pbc_atom_position;
     static std::vector<float> kinetic_energy;
+    static std::vector<float> momentum_magnitude;
 
 
 

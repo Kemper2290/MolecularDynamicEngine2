@@ -47,9 +47,12 @@ float CalcDist3d(float x1, float y1, float z1, float x2, float y2, float z2)
     float dx = x2-x1;
     float dy = y2-y1;
     float dz = z2-z1;
+    float r = std::sqrt((dx*dx) + (dy*dy) + (dz*dz));
 
-    return std::sqrt((dx*dx) + (dy*dy) + (dz*dz));
+    //std::cout << "r distance: " << r << std::endl;
 
+    //return std::sqrt((dx*dx) + (dy*dy) + (dz*dz));
+    return r;
 }
 
 float PBCCalcDist3d(float x1, float y1, float z1, float x2, float y2, float z2, float box_length)
@@ -64,7 +67,7 @@ float PBCCalcDist3d(float x1, float y1, float z1, float x2, float y2, float z2, 
     dz -= box_length * std::round(dz/box_length);
 
     float r = std::sqrt((dx*dx) + (dy*dy) + (dz*dz));
-    std::cout << "r distance: " << r << std::endl;
+    //std::cout << "pbc r distance: " << r << std::endl;
     return r;
 }
 
@@ -314,6 +317,29 @@ std::vector<std::vector<float>> CreateAtomCluster(float spacing, float gridsize)
     return coordinates;
 }
 
+std::vector<float> MIC_2DTrajectory(std::vector<float>& position_inp, float box_size_inp)
+{
+    std::vector<float> replicated_position_inp;
+    int N_atoms = position_inp.size();
+
+    for (int nx = -1; nx <= 1; ++nx)  // can add a nz loop if interested in 3d version but (O) increases greatly
+    {
+        for (int ny = -1; ny <= 1; ++ny)
+        {
+            for (int i = 0; i < N_atoms; ++i)
+            {
+                float x = position_inp[3*i] + nx*box_size_inp;
+                float y = position_inp[(3*i) + 1] + ny*box_size_inp;
+                float z = position_inp[(3*i) + 2];    // unchanged since we dont need z
+
+                replicated_position_inp.push_back(x);
+                replicated_position_inp.push_back(y);
+                replicated_position_inp.push_back(z);
+            }
+        }
+    }
+    return replicated_position_inp;
+}
 
 
 

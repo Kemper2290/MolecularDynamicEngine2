@@ -10,14 +10,15 @@
 #include "Utility/UtilityFunctions.h"
 #include "Movement/VelocityPositionAlgo.h"
 
-namespace plt= matplotlibcpp;
+namespace plt = matplotlibcpp;
 
 float timestep = 0.002; // unit is ps
-float simtime = 1000; // units in ps
+float simtime = 100; // units in ps
 float argon_mass = 39.948; //g/mol
-float box_size = 3;
+float box_size = 12;
 
-int main() {
+int main()
+{
     // Use the function and class declared in myheader.h and defined in myheader.cpp
 
     std::cout << "Hello World" << std::endl;
@@ -44,32 +45,47 @@ int main() {
     LJPotential lj_object;
     lj_object.ReadLJParameters("NonbondedInteraction/EVanDerWaals/LJParameters.txt");
 
-    std::vector<float> generated_init_velocity = Gen_Velocity(pdb2gmx_coord,argon_mass,300);
+    std::vector<float> generated_init_velocity = Gen_Velocity(pdb2gmx_coord, argon_mass, 300);
     std::vector<float> velocity = generated_init_velocity;
+    //std::vector<float> velocity = {0,0,0,0,0,0};
     std::vector<std::vector<float>> trajectory = pdb2gmx_coord;
+    std::vector<std::vector<float>> forces_trajectory;
 
-    lj_object.PairwiseCalcLJPotential(trajectory,pdb2gmx_atomlist);
+    for (int i = 0; i < trajectory[0].size(); ++i)
+    {
+        trajectory[0][i] = trajectory[0][i] - box_size * std::floor(trajectory[0][i] / box_size);
+    }
+
+    std::cout << " updated trajectory for box before sim " << std::endl;
+    Print2DVec(trajectory);
+
+
+    lj_object.PairwiseCalcLJPotential(trajectory, pdb2gmx_atomlist);
     float sigma_ar = lj_object.lj_sigma[0];
     float epsilon_ar = lj_object.lj_epsilon[0];
-    float lj_energy = lj_object.PBCCalcLJPotential(trajectory,sigma_ar,epsilon_ar,true,box_size);
+    float lj_energy = lj_object.PBCCalcLJPotential(trajectory, sigma_ar, epsilon_ar, true, box_size);
     std::cout << "LJ comparison energy : " << lj_energy << std::endl;
 
-    std::vector<float> force = lj_object.PBCForceLJPotential(trajectory,sigma_ar,epsilon_ar,true,box_size);
-    std::vector<float> acceleration = Movement::CalcAcceleration(argon_mass,force);
+    std::vector<float> force = lj_object.PBCForceLJPotential(trajectory, sigma_ar, epsilon_ar,
+                                                             true, box_size);
+    forces_trajectory.push_back(force); // pushes std::vector<float> forces to a forces trajectory to plot
+    std::vector<float> acceleration = Movement::CalcAcceleration(argon_mass, force);
 
 
     for (int i = 0; i < simtime; ++i)
     {
         std::cout << "STARTING SIM LOOP: " << i << std::endl;
 
-        std::vector<float> newposition = Movement::PBCCalcVerletPosition(trajectory,velocity,
-                                                                        acceleration,timestep,box_size,true);
-        float lj_energy = lj_object.PBCCalcLJPotential(trajectory,sigma_ar,epsilon_ar,true,box_size);
-        std::cout <<" lj_energy: " << lj_energy << std::endl;
-        std::vector<float> newforce = lj_object.PBCForceLJPotential(trajectory,sigma_ar,epsilon_ar,true,box_size);
-        std::vector<float> newacceleration = Movement::CalcAcceleration(argon_mass,newforce);
-        std::vector<float> newvelocity = Movement::CalcVerletUpdateVelocity(velocity,acceleration,
-                                                            newacceleration,timestep, argon_mass);
+        std::vector<float> newposition = Movement::PBCCalcVerletPosition(trajectory, velocity,
+                                                                         acceleration, timestep,
+                                                                         box_size, true);
+        float lj_energy = lj_object.PBCCalcLJPotential(trajectory, sigma_ar, epsilon_ar, true, box_size);
+        std::cout << " lj_energy: " << lj_energy << std::endl;
+        std::vector<float> newforce = lj_object.PBCForceLJPotential(trajectory, sigma_ar, epsilon_ar, true, box_size);
+        forces_trajectory.push_back(newforce); // pushes to force trajectory to plot
+        std::vector<float> newacceleration = Movement::CalcAcceleration(argon_mass, newforce);
+        std::vector<float> newvelocity = Movement::CalcVerletUpdateVelocity(velocity, acceleration,
+                                                                            newacceleration, timestep, argon_mass);
         //std::cout << "NEWVELOCITY.SIZE(): " << newvelocity.size() << std::endl;
         trajectory.push_back(newposition);
 
@@ -82,7 +98,6 @@ int main() {
         velocity = newvelocity;
 
         std::cout << "END OF SIM LOOP: " << i << std::endl;
-
     }
 
     std::cout << "Final Position Result From Trajectory Matrix: " << std::endl;
@@ -90,18 +105,28 @@ int main() {
 
     std::vector<float> trajectory_time;
     std::vector<float> atom_dist;
+    std::vector<float> pbc_atom_dist;
+    std::vector<std::vector<float>> mic_trajectory;
 
     int total_time = trajectory.size();
-    for (int i =0;i < trajectory.size();++i)
+    for (int i = 0; i < trajectory.size(); ++i)
     {
         trajectory_time.push_back(i);
-        float dist = PBCCalcDist3d(trajectory[i][0],trajectory[i][1],trajectory[i][2],
-                                    trajectory[i][3],trajectory[i][4],trajectory[i][5],box_size);
+        float pbc_dist = PBCCalcDist3d(trajectory[i][0], trajectory[i][1], trajectory[i][2],
+                                       trajectory[i][3], trajectory[i][4], trajectory[i][5], box_size);
+
+        float dist = CalcDist3d(trajectory[i][0], trajectory[i][1], trajectory[i][2],
+                                trajectory[i][3], trajectory[i][4], trajectory[i][5]);
+
+        std::vector<float> mic_row = MIC_2DTrajectory(trajectory[i], box_size);
+
+
         atom_dist.push_back(dist);
+        pbc_atom_dist.push_back(pbc_dist);
+        mic_trajectory.push_back(mic_row);
     }
-
-
-
+    trajectory_time.erase(trajectory_time.begin());
+    Print2DVec(forces_trajectory);
 
 
     // --- PLOTTING SECTION ---
@@ -109,27 +134,24 @@ int main() {
     std::cout << "PE_output.size(): " << PE_output.size() << std::endl;
     int PE_size = PE_output.size();
     std::vector<int> PE_index(PE_size);
-    std::iota(PE_index.begin(),PE_index.end(),0);
-    auto maxPE_output = std::max_element(PE_output.begin(),PE_output.end());
+    std::iota(PE_index.begin(), PE_index.end(), 0);
+    auto maxPE_output = std::max_element(PE_output.begin(), PE_output.end());
     float maxPE = *maxPE_output;
-    auto minPE_output = std::min_element(PE_output.begin(),PE_output.end());
+    auto minPE_output = std::min_element(PE_output.begin(), PE_output.end());
     float minPE = *minPE_output;
     std::cout << "maxPE: " << maxPE << " minPE: " << minPE << std::endl;
-
-
 
 
     std::vector<float> KE_output = Movement::kinetic_energy;
     std::cout << "KE_output.size(): " << KE_output.size() << std::endl;
     int KE_size = KE_output.size();
     std::vector<int> KE_index(KE_size); // creates vector of size KE_output.size() filled with 0's
-    std::iota(KE_index.begin(),KE_index.end(),0);
-    auto maxKE_output = std::max_element(KE_output.begin(),KE_output.end());
+    std::iota(KE_index.begin(), KE_index.end(), 0);
+    auto maxKE_output = std::max_element(KE_output.begin(), KE_output.end());
     float maxKE = *maxKE_output;
-    auto minKE_output = std::min_element(KE_output.begin(),KE_output.end());
+    auto minKE_output = std::min_element(KE_output.begin(), KE_output.end());
     float minKE = *minKE_output;
     std::cout << "maxKE: " << maxKE << " minKE: " << minKE << std::endl;
-
 
 
     std::vector<float> TE_output;
@@ -140,51 +162,62 @@ int main() {
     }
     int TE_size = TE_output.size();
     std::vector<int> TE_index(TE_size);
-    std::iota(TE_index.begin(),TE_index.end(),0);
+    std::iota(TE_index.begin(), TE_index.end(), 0);
 
 
-
-    plt::plot(PE_index,PE_output);
+    plt::plot(PE_index, PE_output);
     plt::title("Potential Energy");
-    plt::xlim(0,PE_size + 50);
+    plt::xlim(0, PE_size + 50);
     //plt::ylim(minPE-(minPE*.1f),(maxPE+(maxPE*.1f)));
     plt::pause(11);
 
-    plt::plot(KE_index,KE_output);
+    plt::plot(KE_index, KE_output);
     plt::title("Kinetic Energy");
-    plt::xlim(0,(KE_size + 50));
+    plt::xlim(0, (KE_size + 50));
     //plt::ylim(0.0f,maxKE);
     plt::pause(11);
 
-    plt::plot(TE_index,TE_output);
+    plt::plot(TE_index, TE_output);
     plt::title("Total Energy (kJ/mol)");
-    plt::xlim(0,TE_size + 50);
+    plt::xlim(0, TE_size + 50);
     plt::pause(11);
 
-
+    /*
     plt::plot(trajectory_time,atom_dist);
     plt::title("Atom Distance (nm) ");
     plt::xlim(0,total_time);
     plt::pause(11);
 
+    plt::plot(trajectory_time,pbc_atom_dist);
+    plt::title("PBC Atom Distance (nm) ");
+    plt::xlim(0,total_time);
+    plt::pause(11);
+    */
 
 
+    std::vector<float> test_momentum = Movement::momentum_magnitude;
+    plt::plot(trajectory_time, test_momentum);
+    plt::title("Momentum Magnitude (g*nm/mol*ps) ");
+    plt::xlim(0, total_time);
+    //plt::ylim(-.1,.1);
+    plt::pause(11);
 
 
-    Plot_Trajectory(trajectory,.0005,6,6);
+    //Plot_Trajectory(trajectory,.05,box_size,box_size);
+
+    //Plot_Trajectory(mic_trajectory,.5,3*box_size,3*box_size);
 
     float test = mypdb.pdbx[0];
     std::cout << "THIS IS VAR TEST: " << test << std::endl;
 
+    Print1DVec(Movement::momentum_magnitude);
+    std::cout << "Movement::momentum_magnitude.size(): " << Movement::momentum_magnitude.size() << std::endl;
+    std::cout << "test_momentum.size(): " << test_momentum.size() << std::endl;
+    std::cout << "trajectory_time.size(): " << trajectory_time.size() << std::endl;
+
+    std::cout << "Successful Rune: Random ass quote " << std::endl;
     return 0;
 }
-
-
-
-
-
-
-
 
 
 /*

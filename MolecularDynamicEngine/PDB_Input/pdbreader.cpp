@@ -67,7 +67,7 @@ void MyPdbInfo::ReadPDB(const std::string& filename) {
         std::cout << element << " ";
     }
     std::cout << std::endl;
-    std::cout << "This is the pdbmatrix (x,y,z): "<< std::endl;
+    std::cout << "This is the pdbmatrix (x,y,z) in nm: "<< std::endl;
     for (const auto& row: pdbmatrix)
     {
         for (const auto& element: row)
