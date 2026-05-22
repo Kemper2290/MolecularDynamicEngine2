@@ -13,9 +13,9 @@
 namespace plt = matplotlibcpp;
 
 float timestep = 0.002; // unit is ps
-float simtime = 100; // units in ps
+float simtime = 500; // units in ps
 float argon_mass = 39.948; //g/mol
-float box_size = 12;
+float box_size = 6;
 
 int main()
 {
@@ -27,18 +27,20 @@ int main()
     obj.doSomething();
 
     MyPdbInfo mypdb;
-    mypdb.ReadPDB("di_argon.pdb");
+    //mypdb.ReadPDB("di_argon.pdb");
     //mypdb.ReadPDB("tri_argon.pdb");
-    //mypdb.ReadPDB("10_argon.pdb");
+    mypdb.ReadPDB("10_argon.pdb");
     //mypdb.ReadPDB("multi_argon.pdb");
 
 
     //mypdb.MeasureBondDist(mypdb.pdbmatrix);
     std::vector<std::vector<float>> pdb2gmx_coord = mypdb.Pdb2Gmx(mypdb.pdbmatrix);
+    Movement::CenterCoordinatesInBox(pdb2gmx_coord.back(),box_size);
     //std::vector<std::vector<float>> atoms = CreateAtomCluster(4,4);
     //std::vector<std::vector<float>> pdb2gmx_coord = mypdb.Pdb2Gmx(atoms);
     //std::vector<std::string> pdb2gmx_atomlist(16,"AR");
     std::vector<std::string> pdb2gmx_atomlist = mypdb.pdbatomname;
+
 
 
     // Lennard-Jones section
@@ -51,43 +53,51 @@ int main()
     std::vector<std::vector<float>> trajectory = pdb2gmx_coord;
     std::vector<std::vector<float>> forces_trajectory;
 
+    /* ONLY USE FOR PBC
     for (int i = 0; i < trajectory[0].size(); ++i)
     {
         trajectory[0][i] = trajectory[0][i] - box_size * std::floor(trajectory[0][i] / box_size);
     }
-
     std::cout << " updated trajectory for box before sim " << std::endl;
     Print2DVec(trajectory);
-
+    */
 
     lj_object.PairwiseCalcLJPotential(trajectory, pdb2gmx_atomlist);
     float sigma_ar = lj_object.lj_sigma[0];
     float epsilon_ar = lj_object.lj_epsilon[0];
-    float lj_energy = lj_object.PBCCalcLJPotential(trajectory, sigma_ar, epsilon_ar, true, box_size);
-    std::cout << "LJ comparison energy : " << lj_energy << std::endl;
 
+    float lj_energy = lj_object.PBCCalcLJPotential(trajectory, sigma_ar, epsilon_ar, false, box_size);
+    std::cout << "LJ comparison energy : " << lj_energy << std::endl;
     std::vector<float> force = lj_object.PBCForceLJPotential(trajectory, sigma_ar, epsilon_ar,
-                                                             true, box_size);
+                                                             false, box_size);
     forces_trajectory.push_back(force); // pushes std::vector<float> forces to a forces trajectory to plot
     std::vector<float> acceleration = Movement::CalcAcceleration(argon_mass, force);
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Entering Main Loop for Simulation
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     for (int i = 0; i < simtime; ++i)
     {
         std::cout << "STARTING SIM LOOP: " << i << std::endl;
+        std::cout << '\n';
 
         std::vector<float> newposition = Movement::PBCCalcVerletPosition(trajectory, velocity,
                                                                          acceleration, timestep,
-                                                                         box_size, true);
-        float lj_energy = lj_object.PBCCalcLJPotential(trajectory, sigma_ar, epsilon_ar, true, box_size);
+                                                                         box_size, false, false);
+        trajectory.push_back(newposition); // moved to here to fix error
+
+        float lj_energy = lj_object.PBCCalcLJPotential(trajectory, sigma_ar, epsilon_ar, false, box_size);
         std::cout << " lj_energy: " << lj_energy << std::endl;
-        std::vector<float> newforce = lj_object.PBCForceLJPotential(trajectory, sigma_ar, epsilon_ar, true, box_size);
+        std::vector<float> newforce = lj_object.PBCForceLJPotential(trajectory, sigma_ar, epsilon_ar, false, box_size);
         forces_trajectory.push_back(newforce); // pushes to force trajectory to plot
         std::vector<float> newacceleration = Movement::CalcAcceleration(argon_mass, newforce);
         std::vector<float> newvelocity = Movement::CalcVerletUpdateVelocity(velocity, acceleration,
                                                                             newacceleration, timestep, argon_mass);
+        Movement::ApplyReflectiveWalls(trajectory.back(),newvelocity,box_size);
+
         //std::cout << "NEWVELOCITY.SIZE(): " << newvelocity.size() << std::endl;
-        trajectory.push_back(newposition);
+        //trajectory.push_back(newposition);
 
         //std::cout << "Printing Trajectory: " << std::endl;
         //Print2DVec(trajectory);
@@ -126,7 +136,7 @@ int main()
         mic_trajectory.push_back(mic_row);
     }
     trajectory_time.erase(trajectory_time.begin());
-    Print2DVec(forces_trajectory);
+    //Print2DVec(forces_trajectory);
 
 
     // --- PLOTTING SECTION ---
@@ -182,12 +192,15 @@ int main()
     plt::xlim(0, TE_size + 50);
     plt::pause(11);
 
+
     /*
     plt::plot(trajectory_time,atom_dist);
     plt::title("Atom Distance (nm) ");
     plt::xlim(0,total_time);
     plt::pause(11);
+    */
 
+    /*
     plt::plot(trajectory_time,pbc_atom_dist);
     plt::title("PBC Atom Distance (nm) ");
     plt::xlim(0,total_time);
@@ -195,25 +208,25 @@ int main()
     */
 
 
+    /*
     std::vector<float> test_momentum = Movement::momentum_magnitude;
     plt::plot(trajectory_time, test_momentum);
     plt::title("Momentum Magnitude (g*nm/mol*ps) ");
     plt::xlim(0, total_time);
     //plt::ylim(-.1,.1);
     plt::pause(11);
+    */
 
 
-    //Plot_Trajectory(trajectory,.05,box_size,box_size);
+
+    Plot_Trajectory(trajectory,.05,box_size,box_size);
 
     //Plot_Trajectory(mic_trajectory,.5,3*box_size,3*box_size);
 
     float test = mypdb.pdbx[0];
     std::cout << "THIS IS VAR TEST: " << test << std::endl;
 
-    Print1DVec(Movement::momentum_magnitude);
-    std::cout << "Movement::momentum_magnitude.size(): " << Movement::momentum_magnitude.size() << std::endl;
-    std::cout << "test_momentum.size(): " << test_momentum.size() << std::endl;
-    std::cout << "trajectory_time.size(): " << trajectory_time.size() << std::endl;
+
 
     std::cout << "Successful Rune: Random ass quote " << std::endl;
     return 0;

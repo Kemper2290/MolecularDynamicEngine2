@@ -29,7 +29,8 @@ public:
                                                         std::vector<float> acceleration_inp,
                                                         float dt,
                                                         float box_length,
-                                                        bool pbc);
+                                                        bool pbc,
+                                                        bool rbc);
 
 
     static std::vector<float> CalcVerletUpdateVelocity(std::vector<float> old_velocity_input,
@@ -39,9 +40,9 @@ public:
                                                         float mass_input);
 
 
+    static void ApplyReflectiveWalls(std::vector<float>& position, std::vector<float>& velocity,float boxsize);
 
-    //static std::vector<float> ApplyPeriodicBoundaryConditions(std::vector<float> old_position_input,float box_lenght);
-
+    static void CenterCoordinatesInBox(std::vector<float>& coords, float box_length);
 
     // variables
 

@@ -213,7 +213,6 @@ void Plot_Trajectory(std::vector<std::vector<float>> trajectory_input,float dela
 
 
     namespace plt= matplotlibcpp;
-
     for (int frame =0; frame < trajectory_input.size();++frame)
     {
 
@@ -222,10 +221,14 @@ void Plot_Trajectory(std::vector<std::vector<float>> trajectory_input,float dela
         //std::string label = "Simulation Time: " + std::to_string(frame) + " Simulation Temp: " + std::to_string(temperature_list[frame]) + "F";
         std::string label = "Simulation Time: " + std::to_string(frame) + " Simulation Temp: 300K ";
         plt::named_plot(label,xcol[frame],ycol[frame],"bo");
+        plt::axhline(ylim-.02,0,1,{{"color", "red"}, {"linestyle", "--"}});
+        plt::axhline(0+.02,0,1,{{"color", "red"}, {"linestyle", "--"}});
+        plt::axvline(ylim-.02,0,1,{{"color", "red"}, {"linestyle", "--"}});
+        plt::axvline(0+.02,0,1,{{"color", "red"}, {"linestyle", "--"}});
         //plt::plot(xcol[0],ycol[0],"ro");
         //plt::plot(flower_xcol,flower_ycol,"go");
-        plt::xlim(-xlim,ylim);
-        plt::ylim(-ylim,ylim);
+        plt::xlim(xlim-xlim,ylim);
+        plt::ylim(xlim-ylim,ylim);
         plt::legend();
         plt::draw();
         plt::pause(delay);
@@ -340,6 +343,7 @@ std::vector<float> MIC_2DTrajectory(std::vector<float>& position_inp, float box_
     }
     return replicated_position_inp;
 }
+
 
 
 

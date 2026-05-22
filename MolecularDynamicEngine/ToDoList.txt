@@ -64,3 +64,10 @@ all argon atoms since i now have distance matrix
     - calculating the momentum and tracking but right now its giving 0's
     -acceleration was acutally good so no need to worry about
 
+// 5/17/2026
+    - finished MIC and commit and pushed to github
+    - merged MIC branch with  master
+
+// 5/18/2026
+    - created reflective boundary condition branch
+    -adding RBC conditions to position function and not force

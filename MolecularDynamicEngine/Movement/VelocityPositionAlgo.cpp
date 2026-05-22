@@ -121,7 +121,8 @@ std::vector<float> Movement::PBCCalcVerletPosition(std::vector<std::vector<float
                                                    std::vector<float> acceleration_inp,
                                                    float dt,
                                                    float box_length,
-                                                   bool pbc)
+                                                   bool pbc,
+                                                   bool rbc)
 {
     std::cout << "Beginning of PBCCalcVerletPosition: " << std::endl;
     if (pbc == true)
@@ -151,10 +152,34 @@ std::vector<float> Movement::PBCCalcVerletPosition(std::vector<std::vector<float
                 //std::cout << "PBC Verlet Position is turned on " << std::endl;
                 r_new[idx] -= box_length * std::floor(r_new[idx] / box_length);
             }
-            else if (pbc == false)
+            //else if (pbc == false)
+            //{
+            //    //std::cout << "PBC Verlet Position is turned off " << std::endl;
+            //}
+            else if (rbc == true)
             {
-                //std::cout << "PBC Verlet Position is turned off " << std::endl;
+                //std::cout << "RBC Verlet Position is turned on " << "\n";
+
+                if (r_new[idx] < 0.0f)
+                {
+                    // techniquely xnew = 2L - x where L is box position at 0
+                    r_new[idx] = -r_new[idx];
+                    velocity_inp[idx] *= -1.0f;
+                }
+                else if (r_new[idx] > box_length)
+                {
+                    r_new[idx] = 2.0f * box_length - r_new[idx];
+                    velocity_inp[idx] *= -1.0f;
+
+                }
+
             }
+            else
+            {
+                //std::cout << "RBC and PBC Verlet Position is turned off" << "\n";
+
+            }
+
         }
     }
     std::cout << "r_new position vector: " << std::endl;
@@ -222,26 +247,65 @@ std::vector<float> Movement::CalcVerletUpdateVelocity(std::vector<float> old_vel
 }
 
 
-/*
-std::vector<float> Movement::ApplyPeriodicBoundaryConditions(std::vector<float> old_position_input,float box_length)
+void Movement::ApplyReflectiveWalls (std::vector<float>& position, std::vector<float>& velocity,float boxsize)
 {
-    std::cout << "Beginning of ApplyPeriodicBoundaryConditions: " << std::endl;
-
-    new_pbc_atom_position.clear();
-
-    for (int i = 0; i < old_position_input.size(); ++i)
+    std::cout << "Activating ApplyReflectiveWalls " << '\n';
+    for (int i =0; i < position.size(); ++i)
     {
-        std::cout << "old_position_input[" << i << "] = " << old_position_input[i] << std::endl;
-        float floor = std::floor(old_position_input[i]/box_length);
-        std::cout << "floor value: " << floor << std::endl;
-        float lfloor = box_length * floor;
-        std::cout << "lfloor value: " << lfloor << std::endl;
-        float position = old_position_input[i] - lfloor;
-        std::cout << "position after boxlength shit : " << position << std::endl;
-        new_pbc_atom_position.push_back(position);
+        //left wall
+        if (position[i] < 0.0f)
+        {
+            // also uses xnew=2l-xold but L = 0
+            position[i] = -position[i];
+            velocity[i] *= -1.0f;
+        }
+        // right wall
+        else if (position[i] > boxsize)
+        {
+            position[i] = (2.0f * boxsize) - position[i];
+            velocity[i] *= -1.0f;
+        }
+    }
+}
+
+void Movement::CenterCoordinatesInBox(std::vector<float>& coords, float box_length)
+{
+    int N_atoms = coords.size()/3;
+
+    float x_center = 0.0;
+    float y_center = 0.0;
+    float z_center = 0.0;
+
+    // getting molecules geometric center
+    for (int i =0; i < N_atoms; ++i)
+    {
+        x_center += coords[(3*i)];
+        y_center += coords[(3*i) + 1];
+        z_center += coords[(3*i) + 2];
     }
 
-    std::cout << " End of ApplyPeriodicBoundaryConditions: " << std::endl;
-    return new_pbc_atom_position;
+    x_center /= N_atoms;
+    y_center /= N_atoms;
+    z_center /= N_atoms;
+
+    // Box center
+    float half_box = box_length / 2.0;
+
+    // Translation of atoms into  center of box
+    float dx = half_box-x_center;
+    float dy = half_box-y_center;
+    float dz = half_box-z_center;
+
+    // shift all atoms into center
+    for (int i =0; i < N_atoms; ++i)
+    {
+        coords[3*i]     += dx;
+        coords[(3*i)+1] += dy;
+        coords[(3*i)+2] += dz;
+    }
 }
-*/
+
+
+
+
+
