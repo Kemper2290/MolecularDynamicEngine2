@@ -57,7 +57,7 @@ public:
     std::vector<float> lj_energy;   // TermCalcLJPotential CalcLJPotential
     std::vector<std::vector<float>> atom_pairwise_dist_lj_energy_matrix;    //TermCalcLJPotential
     float sum_lj_energy;    //TermCalcLJPotential
-    std::vector<float> potential_energy;
+    std::vector<float> lj_potential_energy;
 
     //FORCE Var//
     std::vector<std::vector<float>> atom_pairwise_dist_lj_force_matrix;

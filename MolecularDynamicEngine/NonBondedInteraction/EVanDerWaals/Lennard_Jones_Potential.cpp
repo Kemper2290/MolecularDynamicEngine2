@@ -328,7 +328,7 @@ float LJPotential::PBCCalcLJPotential(std::vector<std::vector<float>> position_i
         }
     }
 
-    potential_energy.push_back(U_total);
+    lj_potential_energy.push_back(U_total);
     std::cout << " End of PBCCalcLJPotential " << std::endl;
     return U_total;
 }
@@ -622,8 +622,8 @@ std::vector<float> LJPotential::PBCForceLJPotential(
         }
     }
     std::cout << std::endl;
-    std::cout << "Forces vectors: fx1 fy1 fz1 fx2 " << std::endl;
-    Print1DVec(forces);
+    //std::cout << "Forces vectors: fx1 fy1 fz1 fx2 " << std::endl;
+    //Print1DVec(forces);
     std::cout << " End of PBCForceLJPotential " << std::endl;
 
     return forces;

@@ -7,13 +7,14 @@
 #include <Python.h>
 #include "matplotlibcpp.h"
 #include "NonBondedInteraction/EVanDerWaals/Lennard_Jones_Potential.h"
+#include "NonBondedInteraction/EElectrostatic/Coulomb_Potential.h"
 #include "Utility/UtilityFunctions.h"
 #include "Movement/VelocityPositionAlgo.h"
 
 namespace plt = matplotlibcpp;
 
 float timestep = 0.002; // unit is ps
-float simtime = 500; // units in ps
+float simtime = 100; // units in ps
 float argon_mass = 39.948; //g/mol
 float box_size = 6;
 
@@ -27,9 +28,9 @@ int main()
     obj.doSomething();
 
     MyPdbInfo mypdb;
-    //mypdb.ReadPDB("di_argon.pdb");
+    mypdb.ReadPDB("di_argon.pdb");
     //mypdb.ReadPDB("tri_argon.pdb");
-    mypdb.ReadPDB("10_argon.pdb");
+    //mypdb.ReadPDB("10_argon.pdb");
     //mypdb.ReadPDB("multi_argon.pdb");
 
 
@@ -47,12 +48,16 @@ int main()
     LJPotential lj_object;
     lj_object.ReadLJParameters("NonbondedInteraction/EVanDerWaals/LJParameters.txt");
 
+    // Coulomb section
+    CoulombPotential coulomb_object;
+
     std::vector<float> generated_init_velocity = Gen_Velocity(pdb2gmx_coord, argon_mass, 300);
     std::vector<float> velocity = generated_init_velocity;
     //std::vector<float> velocity = {0,0,0,0,0,0};
     std::vector<std::vector<float>> trajectory = pdb2gmx_coord;
     std::vector<std::vector<float>> forces_trajectory;
 
+    ///////////////////////////////////////////
     /* ONLY USE FOR PBC
     for (int i = 0; i < trajectory[0].size(); ++i)
     {
@@ -61,15 +66,39 @@ int main()
     std::cout << " updated trajectory for box before sim " << std::endl;
     Print2DVec(trajectory);
     */
+    ///////////////////////////////////////////////////
 
-    lj_object.PairwiseCalcLJPotential(trajectory, pdb2gmx_atomlist);
+    //lj_object.PairwiseCalcLJPotential(trajectory, pdb2gmx_atomlist);
     float sigma_ar = lj_object.lj_sigma[0];
     float epsilon_ar = lj_object.lj_epsilon[0];
 
     float lj_energy = lj_object.PBCCalcLJPotential(trajectory, sigma_ar, epsilon_ar, false, box_size);
     std::cout << "LJ comparison energy : " << lj_energy << std::endl;
-    std::vector<float> force = lj_object.PBCForceLJPotential(trajectory, sigma_ar, epsilon_ar,
+    float coulomb_energy = coulomb_object.CalcCoulombPotential(trajectory,-1,false,box_size);
+    std::cout << "Coulomb comparison energy: " << coulomb_energy << '\n';
+
+
+    std::vector<float> lj_forces = lj_object.PBCForceLJPotential(trajectory, sigma_ar, epsilon_ar,
                                                              false, box_size);
+    std::cout << "lj_forces " << '\n';
+    Print1DVec(lj_forces);
+    std::vector<float> coulomb_forces = coulomb_object.CalcCoulombForce(trajectory,-1,false,box_size);
+    std::cout << "coulomb_forces " << '\n';
+    Print1DVec(coulomb_forces);
+
+    std::vector<float> total_force_vectors;
+
+    for (int i=0; i < lj_forces.size(); ++i)
+    {
+        total_force_vectors.push_back(lj_forces[i] + coulomb_forces[i]);
+    }
+
+    std::cout << '\n';
+    Print1DVec(total_force_vectors);
+    return 0;
+
+
+    /*
     forces_trajectory.push_back(force); // pushes std::vector<float> forces to a forces trajectory to plot
     std::vector<float> acceleration = Movement::CalcAcceleration(argon_mass, force);
 
@@ -140,7 +169,7 @@ int main()
 
 
     // --- PLOTTING SECTION ---
-    std::vector<float> PE_output = lj_object.potential_energy;
+    std::vector<float> PE_output = lj_object.lj_potential_energy;
     std::cout << "PE_output.size(): " << PE_output.size() << std::endl;
     int PE_size = PE_output.size();
     std::vector<int> PE_index(PE_size);

@@ -1,0 +1,19 @@
+      ###################################################################################
+     #############                                                          ############
+    #############      The SIRAH force field version 2.4 March 2026 (c)    ############
+   #############   Developed by the Group of Biomolecular Simulations     ############
+  #############              Institut Pasteur de Montevideo              ############
+ #############                                                          ############
+###################################################################################
+
+The following parameters were created by Antonella Alba and developed in the spirit of making possible to backmap structures that include non standard modifications and common ligands.
+Hence, they were developed using a standard procedure, that consisted in: 
+taking CIF files available in the Protein Data Bank (https://www.rcsb.org/) as reference structures,
+keeping the same three letter code that every ligand/modified residue has assigned according to wwPDB Chemical Component Dictionary (CCD)(https://www.wwpdb.org/data/ccd),
+calculating charges using AM1-BCC,
+assigning atom types with GAFF2.
+
+If you find yourself in doubt you can reach us through,
+https://www-sirahff-com,
+aalba@pasteur.edu.uy,
+https://github.com/SIRAHFF/documentation/issues, 

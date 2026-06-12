@@ -1,0 +1,311 @@
+++ SIRAH Lipids: Barrera et al, J Mol Model,(2017),23:259. | Barrera et al. JCTC (2019) DOI: 10.1021/acs.jctc.9b00435
+MASS
+PL           50.   ; Phosphate of lipids' head group, same as PX without (DNA/PTM)-(Ser,Thr,Cys) LJoff
+PS           50.   ; Carboxylic group in phosphoserine (same as PL)
+ET           50.   ; Ethanolamine phosphate group (same LJ as WH), with LJoff
+WX           50.   ; Amine group in phosphoserine (same LJ as WH)
+GL           50.   ; glycerol
+E1           50.   ; polar type1 ester
+E2           50.   ; polar type1 ester
+Y2           50.   ; hydrophobic type2 carbon
+YT           50.   ; hydrophobic terminal methylic carbon in 3N +/- 1 acylic tail (e.g. Myristoyl)
+YF           50.   ; hydrophobic terminal methylic carbon in 3N acylic tail (e.g. Oleoyl)
+W6           50.   ; W1 like for cholesterol
+W7           50.   ; W1 like for cholesterol
+Y7           50.   ; Y2 like for cholesterol
+W8           50.   ; W1 like for cholesterol (from amino.frcmod)
+W9           50.   ; W1 like for cholesterol (from amino.frcmod)
+Y8           50.   ; Y2 like for cholesterol (from amino.frcmod)
+
+BOND
+X7-PL        50.        4.53
+ET-PL        50.        4.53
+WX-PL        50.        3.73
+WX-PS        50.        2.25
+PL-GL        50.        3.84
+GL-E1        50.        3.52
+GL-E2        50.        2.35
+E1-Y2        50.        3.61
+E2-Y2        50.        3.61
+Y2-Y2        50.        3.67
+Y2-W1        50.        3.67
+Y2-YT        50.        4.527 ; Acyl tail (3N+1: Palmitoyl) or (3N-1: Myristoyl)
+Y2-YF        50.        3.67  ; Acyl tail (3N: Oleoyl), N = Number of carbon atoms in Acyl tail
+QP-QO        30.        1.00  ; [Cholesterol -> KK]
+QO-W7        30.        3.83  ;
+QO-W6        30.        4.83  ;
+QO-Y7        30.        4.97  ;
+W7-W6        30.        3.71  ;
+W7-Y7        30.        2.55  ;
+W7-W9        30.        4.46  ;
+W6-Y7        30.        3.51  ;
+W6-W8        30.        4.54  ;
+Y7-Y8        30.        4.53  ;
+W9-W8        30.        3.83  ;
+W9-Y8        30.        2.59  ;
+W9-Y2        30.        4.69  ;
+W8-Y8        30.        3.05  ;
+W8-Y2        30.        4.48  ;
+Y8-Y2        30.        4.48  ;
+Y2-X2        30.        3.83  ; [Cholesterol -> KK] ends
+QP-PL        50.        4.00  ; POPG
+GO-Y2        50.        3.00  ; [Ceramide -> HZS] [Sphingolipids ->  CZP - CZS]
+QO-W1        50.        3.40
+GL-QO        50.        2.44
+GL-GN        50.        1.47  ; [Ceramide -> HZS] [Sphingolipids ->  CZP - CZS] ends
+
+ANGLE
+PS-WX-PL     75.      108.1
+X7-PL-GL     75.       92.25
+ET-PL-GL     75.       92.25
+WX-PL-GL     75.       85.89
+PL-GL-E1     75.      144.96
+PL-GL-E2     75.      135.79
+E1-GL-E2     75.       92.25
+GL-E1-Y2     75.      152.41
+GL-E2-Y2     75.      111.15
+E1-Y2-Y2     75.      161.0
+E2-Y2-Y2     75.      161.0
+Y2-Y2-Y2      1.67    180.0
+Y2-Y2-W1      1.67    180.0
+Y2-W1-Y2      2.39    120.0
+Y2-Y2-YT      1.67    180.0
+Y2-Y2-YF      1.67    180.0
+QP-QO-W7     50.       96.82 ; [Cholesterol -> KK]
+QP-QO-W6     50.      137.36 ;
+QP-QO-Y7     50.      121.35 ;
+W7-QO-W6     50.       49.06 ;
+W7-QO-Y7     50.       30.31 ;
+W6-QO-Y7     50.       41.99 ;
+QO-W7-W6     50.       79.62 ;
+QO-W7-Y7     50.      100.29 ;
+QO-W7-W9     50.      158.82 ;
+W6-W7-Y7     50.       65.00 ;
+W6-W7-W9     50.       79.34 ;
+Y7-W7-W9     50.       72.42 ;
+QO-W6-W7     50.       51.32 ;
+QO-W6-Y7     50.       71.10 ;
+QO-W6-W8     50.      153.30 ;
+W7-W6-Y7     50.       41.32 ;
+W7-W6-W8     50.      101.96 ;
+Y7-W6-W8     50.       87.62 ;
+QO-Y7-W7     50.       49.39 ;
+QO-Y7-W6     50.       66.91 ;
+QO-Y7-Y8     50.      148.05 ;
+W7-Y7-W6     50.       73.68 ;
+W7-Y7-Y8     50.      107.39 ;
+W6-Y7-Y8     50.       86.66 ;
+W7-W9-W8     50.      101.43 ;
+W7-W9-Y8     50.      108.46 ;
+W7-W9-Y2     50.      161.98 ;
+W8-W9-Y8     50.       52.56 ;
+W8-W9-Y2     50.       62.41 ;
+Y8-W9-Y2     50.       62.12 ;
+W6-W8-W9     50.       77.07 ;
+W6-W8-Y8     50.       91.95 ;
+W6-W8-Y2     50.      143.45 ;
+W9-W8-Y8     50.       42.24 ;
+W9-W8-Y2     50.       68.21 ;
+Y8-W8-Y2     50.       70.05 ;
+Y7-Y8-W9     50.       70.96 ;
+Y7-Y8-W8     50.       93.66 ;
+Y7-Y8-Y2     50.      146.29 ;
+W9-Y8-W8     50.       85.20 ;
+W9-Y8-Y2     50.       78.21 ;
+W8-Y8-Y2     50.       70.05 ;
+W9-Y2-W8     50.       49.38 ;
+W9-Y2-Y8     50.       32.67 ;
+W9-Y2-X2      2.      163.23 ;tail flexibility
+W8-Y2-Y8     50.       39.90 ;
+W8-Y2-X2      2.      142.17 ;tail flexibility
+Y8-Y2-X2      0.        0.00 ;tail flexibility [Cholesterol -> KK] ends
+QO-QP-PL      0.        0.00 ;POPG
+QP-PL-GL     75.       92.25 ;POPG
+GO-Y2-Y2     75.      129.00 ;[Ceramide -> HZS] [Sphingolipids ->  CZP - CZS]
+GN-GO-Y2     75.       82.00
+QP-QO-W1      0.        0.00
+QO-GL-GN     75.      145.00
+QO-W1-Y2      2.39    144.00
+GL-QO-QP     75.       72.00
+GL-QO-W1     75.       76.00
+GL-GN-GO     75.       95.00
+QO-GL-QO     75.       92.00
+PL-GL-GN     75.      126.00
+PL-GL-QO     75.       78.00 ;[Ceramide -> HZS] [Sphingolipids ->  CZP - CZS] ends
+
+DIHEDRAL
+PS-WX-PL-GL   1    0.    0.    1.
+WX-PL-GL-E1   1    0.    0.    1.
+WX-PL-GL-E2   1    0.    0.    1.
+X7-PL-GL-E1   1    0.    0.    1.
+X7-PL-GL-E2   1    0.    0.    1.
+ET-PL-GL-E1   1    0.    0.    1.
+ET-PL-GL-E2   1    0.    0.    1.
+PL-GL-E1-Y2   1    0.    0.    1.
+PL-GL-E2-Y2   1    0.    0.    1.
+E1-GL-E2-Y2   1    0.    0.    1.
+E2-GL-E1-Y2   1    0.    0.    1.
+GL-E1-Y2-Y2   1    0.    0.    1.
+GL-E2-Y2-Y2   1    0.    0.    1.
+E1-Y2-Y2-Y2   1    0.    0.    1.
+E2-Y2-Y2-Y2   1    0.    0.    1.
+E1-Y2-Y2-W1   1    0.    0.    1.
+E2-Y2-Y2-W1   1    0.    0.    1.
+Y2-Y2-Y2-Y2   1    0.    0.    1.
+Y2-Y2-W1-Y2   1    0.    0.    1.
+Y2-W1-Y2-Y2   1    0.    0.    1.
+W1-Y2-Y2-YT   1    0.    0.    1.
+Y2-Y2-Y2-YT   1    0.    0.    1.
+W1-Y2-Y2-YF   1    0.    0.    1.
+Y2-Y2-Y2-YF   1    0.    0.    1.
+QP-QO-W7-Y7   1    0.    0.    1. ; [Cholesterol -> KK]
+QP-QO-W7-W9   1    0.    0.    1.
+W6-QO-W7-Y7   1    0.    0.    1.
+QP-QO-W7-W6   1    0.    0.    1.
+W6-QO-W7-W9   1    0.    0.    1.
+Y7-QO-W7-W6   1    0.    0.    1.
+Y7-QO-W7-W9   1    0.    0.    1.
+QP-QO-W6-Y7   1    0.    0.    1.
+QP-QO-W6-W8   1    0.    0.    1.
+W7-QO-W6-Y7   1    0.    0.    1.
+QP-QO-W6-W7   1    0.    0.    1.
+QO-W7-W6-Y7   1    0.    0.    1.
+Y7-QO-W6-W7   1    0.    0.    1.
+Y7-QO-W6-W8   1    0.    0.    1.
+QP-QO-Y7-W7   1    0.    0.    1.
+QP-QO-Y7-W6   1    0.    0.    1.
+QP-QO-Y7-Y8   1    0.    0.    1.
+W7-QO-Y7-W6   1    0.    0.    1.
+W7-QO-Y7-Y8   1    0.    0.    1.
+W6-QO-Y7-W7   1    0.    0.    1.
+W6-QO-Y7-Y8   1    0.    0.    1.
+QO-W7-W6-W8   1    0.    0.    1.
+Y7-W7-W6-QO   1    0.    0.    1.
+Y7-W7-W6-W8   1    0.    0.    1.
+W9-W7-W6-QO   1    0.    0.    1.
+W9-W7-W6-Y7   1    0.    0.    1.
+W9-W7-W6-W8   1    0.    0.    1.
+W7-QO-W6-W8   1    0.    0.    1.
+QO-W7-Y7-W6   1    0.    0.    1.
+W9-W7-Y7-W6   1    0.    0.    1.
+QO-W7-Y7-Y8   1    0.    0.    1.
+W6-W7-Y7-QO   1    0.    0.    1.
+W6-W7-Y7-Y8   1    0.    0.    1.
+W9-W7-Y7-QO   1    0.    0.    1.
+W9-W7-Y7-Y8   1    0.    0.    1.
+QO-W7-W9-W8   1    0.    0.    1.
+QO-W7-W9-Y8   1    0.    0.    1.
+QO-W7-W9-Y2   1    0.    0.    1.
+Y7-W7-W9-W8   1    0.    0.    1.
+Y7-W7-W9-Y8   1    0.    0.    1.
+W6-W7-W9-W8   1    0.    0.    1.
+W6-W7-W9-Y8   1    0.    0.    1.
+W6-W7-W9-Y2   1    0.    0.    1.
+Y7-W7-W9-Y2   1    0.    0.    1.
+QO-W6-Y7-W7   1    0.    0.    1.
+W8-W6-Y7-W7   1    0.    0.    1.
+QO-W6-Y7-Y8   1    0.    0.    1.
+W7-W6-Y7-QO   1    0.    0.    1.
+W7-W6-Y7-Y8   1    0.    0.    1.
+W8-W6-Y7-QO   1    0.    0.    1.
+W8-W6-Y7-Y8   1    0.    0.    1.
+QO-W6-W8-W9   1    0.    0.    1.
+QO-W6-W8-Y8   1    0.    0.    1.
+QO-W6-W8-Y2   1    0.    0.    1.
+Y7-W6-W8-W9   1    0.    0.    1.
+Y7-W6-W8-Y8   1    0.    0.    1.
+W7-W6-W8-W9   1    0.    0.    1.
+W7-W6-W8-Y8   1    0.    0.    1.
+W7-W6-W8-Y2   1    0.    0.    1.
+Y7-W6-W8-Y2   1    0.    0.    1.
+QO-Y7-Y8-W9   1    0.    0.    1.
+QO-Y7-Y8-W8   1    0.    0.    1.
+QO-Y7-Y8-Y2   1    0.    0.    1.
+W7-Y7-Y8-W9   1    0.    0.    1.
+W7-Y7-Y8-W8   1    0.    0.    1.
+W7-Y7-Y8-Y2   1    0.    0.    1.
+W6-Y7-Y8-W9   1    0.    0.    1.
+W6-Y7-Y8-W8   1    0.    0.    1.
+W6-Y7-Y8-Y2   1    0.    0.    1.
+W7-W9-W8-W6   1    0.    0.    1.
+W7-W9-W8-Y8   1    0.    0.    1.
+W7-W9-W8-Y2   1    0.    0.    1.
+Y8-W9-W8-W6   1    0.    0.    1.
+Y8-W9-W8-Y2   1    0.    0.    1.
+Y2-W9-W8-W6   1    0.    0.    1.
+Y2-W9-W8-Y8   1    0.    0.    1.
+W7-W9-Y8-W8   1    0.    0.    1.
+Y2-W9-Y8-W8   1    0.    0.    1.
+W7-W9-Y8-Y7   1    0.    0.    1.
+W7-W9-Y8-Y2   1    0.    0.    1.
+W8-W9-Y8-Y7   1    0.    0.    1.
+W8-W9-Y8-Y2   1    0.    0.    1.
+Y2-W9-Y8-Y7   1    0.    0.    1.
+W7-W9-Y2-W8   1    0.    0.    1.
+W7-W9-Y2-X2   1    0.    0.    1.
+W8-W9-Y2-X2   1    0.    0.    1.
+Y8-W9-Y2-W8   1    0.    0.    1.
+Y8-W9-Y2-X2   1    0.    0.    1.
+W7-W9-Y2-Y8   1    0.    0.    1.
+W8-W9-Y2-Y8   1    0.    0.    1.
+W6-W8-Y8-W9   1    0.    0.    1.
+Y2-W8-Y8-W9   1    0.    0.    1.
+W6-W8-Y8-Y7   1    0.    0.    1.
+W6-W8-Y8-Y2   1    0.    0.    1.
+W9-W8-Y8-Y7   1    0.    0.    1.
+W9-W8-Y8-Y2   1    0.    0.    1.
+Y2-W8-Y8-Y7   1    0.    0.    1.
+W6-W8-Y2-W9   1    0.    0.    1.
+W6-W8-Y2-X2   1    0.    0.    1.
+W9-W8-Y2-X2   1    0.    0.    1.
+Y8-W8-Y2-W9   1    0.    0.    1.
+Y8-W8-Y2-X2   1    0.    0.    1.
+W6-W8-Y2-Y8   1    0.    0.    1.
+W9-W8-Y2-Y8   1    0.    0.    1.
+Y7-Y8-Y2-W9   1    0.    0.    1.
+Y7-Y8-Y2-W8   1    0.    0.    1.
+Y7-Y8-Y2-X2   1    0.    0.    1.
+W9-Y8-Y2-W8   1    0.    0.    1.
+W9-Y8-Y2-X2   1    0.    0.    1.
+W8-Y8-Y2-W9   1    0.    0.    1.
+W8-Y8-Y2-X2   1    0.    0.    1. ; [Cholesterol -> KK] ends
+QO-QP-PL-GL   1    0.    0.    1. ;POPG
+QP-PL-GL-E1   1    0.    0.    1. ;POPG
+QP-PL-GL-E2   1    0.    0.    1. ;POPG
+GO-Y2-Y2-Y2   1    0.    0.    1. ;[Ceramide -> HZS] [Sphingolipids ->  CZP - CZS]
+W1-Y2-Y2-Y2   1    0.    0.    1.
+GN-GL-QO-W1   1    0.    0.    1.
+GN-GO-Y2-Y2   1    0.    0.    1.
+QP-QO-GL-GN   1    0.    0.    1.
+QP-QO-W1-Y2   1    0.    0.    1.
+QO-GL-GN-GO   1    0.    0.    1.
+QO-W1-Y2-Y2   1    0.    0.    1.
+GL-QO-W1-Y2   1    0.    0.    1.
+GL-GN-GO-Y2   1    7.17  0.    1.
+QO-GL-QO-QP   1    0.    0.    1.
+QO-GL-QO-W1   1    0.    0.    1.
+QO-GL-GN-GO   1    0.    0.    1.
+QP-QO-GL-QO   1    0.    0.    1.
+PL-GL-GN-GO   1    0.    0.    1.
+PL-GL-QO-QP   1    0.    0.    1.
+PL-GL-QO-W1   1    0.    0.    1.
+X7-PL-GL-GN   1    0.    0.    1.
+X7-PL-GL-QO   1    0.    0.    1. ; [Ceramide -> HZS] [Sphingolipids ->  CZP - CZS] ends
+
+NONBON
+PL            2.6000    0.2000          ; same as PX without (DNA/PTM)-(Ser,Thr,Cys) LJoff
+PS            2.6000    0.2000          ; same as PL
+ET            1.9643    0.1315          ; Ethanolamine phosphate group (same LJ as WH), with LJoff
+WX            1.9643    0.1315          ; Amine group in phosphoserine (same LJ as WH)
+GL            2.3572    0.4780          ; glycerol
+E1            2.3010    0.1315          ; polar type1 ester
+E2            2.3010    0.1315          ; polar type1 ester
+Y2            2.3572    0.4780          ; hydrophobic type2 carbon
+YT            2.3572    0.7648          ; hydrophobic terminal methylic carbon in 3N +/- 1 acylic tail
+YF            2.3572    0.7648          ; hydrophobic terminal methylic carbon in 3N acylic tail
+W6            1.9643    0.4063.         ; W1 like for cholesterol (from amino.frcmod)
+W7            1.9643    0.4063.         ; W1 like for cholesterol (from amino.frcmod)
+Y7            2.3572    0.4780.         ; Y2 like for cholesterol (from amino.frcmod)
+W8            1.9643    0.4063.         ; W1 like for cholesterol (from amino.frcmod)
+W9            1.9643    0.4063.         ; W1 like for cholesterol (from amino.frcmod)
+Y8            2.3572    0.4780.         ; Y2 like for cholesterol (from amino.frcmod)

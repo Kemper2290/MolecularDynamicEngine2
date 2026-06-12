@@ -2,7 +2,7 @@
 
         atoms        sigma(A)       epsilon(kJ/mol)
 PAIR    Ar-Ar        3.40           0.997
-
+PAIR    Cl(-)-Cl(-)  4.0456         1.86188
 
 
 
